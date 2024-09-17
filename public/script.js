@@ -11,119 +11,135 @@ const resumeOutput = document.getElementById('resumeOutput');
 const form = document.getElementById('form');
 const makeform = document.getElementById('makeform');
 const pstitle = document.getElementById('pstitle');
-const Name = document.getElementById('name')?.value || '-';
-const fatherName = document.getElementById('fname')?.value || '-';
-const email = document.getElementById('email')?.value || '-';
-const contact = document.getElementById('contact')?.value || '-';
-const address = document.getElementById('address')?.value || '-';
 const pdfGen = document.getElementById('pdfGen');
+const addimage = document.getElementById('add-image');
+const pfp = document.getElementById('pfp');
+const imgLoader = () => {
+    const addimage = document.getElementById('add-image');
+    const pfp = document.getElementById('pfp');
+    const file = addimage.files?.[0];
+    if (file) {
+        const url = URL.createObjectURL(file);
+        pfp.src = url;
+        const read = new FileReader();
+        read.onload = () => {
+            pfp.src = read.result;
+            console.log('pfp changed');
+        };
+        read.readAsDataURL(file);
+    }
+    else {
+        console.log("file is false");
+    }
+};
+const updateSkillButtonText = () => {
+    if (skills.classList.contains('hidden')) {
+        skillButton.textContent = 'SHOW SKILLS';
+    }
+    else {
+        skillButton.textContent = 'HIDE SKILLS';
+    }
+};
 if (skillButton) {
     skillButton.addEventListener('click', () => {
-        skills.classList.toggle("hidden");
-        if (skills.classList.contains('hidden')) {
-            skillButton.textContent = 'SHOW SKILLS';
-        }
-        else {
-            skillButton.textContent = 'HIDE SKILLS';
-        }
+        skills.classList.toggle('hidden');
+        updateSkillButtonText();
     });
 }
 else {
-    console.error('something bad happened!');
+    console.error('skillButton element is missing!');
 }
-if (addexp) {
-    addexp.addEventListener('click', () => {
-        if (expform) {
-            const expform2 = expform.cloneNode(true);
-            expform.appendChild(expform2);
-        }
-    });
-}
-if (addedu) {
-    addedu.addEventListener('click', () => {
-        if (formInEdu) {
-            const formInEdu2 = formInEdu.cloneNode(true);
-            formInEdu.appendChild(formInEdu2);
-        }
-    });
-}
+const mainExpForm = document.getElementById('mainexpForm');
+addexp.addEventListener('click', () => {
+    const expformClone = expform.cloneNode(true);
+    mainExpForm?.appendChild(expformClone);
+});
+const mainEduForm = document.getElementById('maineduForm');
+addedu.addEventListener('click', () => {
+    const formInEduClone = formInEdu.cloneNode(true);
+    mainEduForm?.appendChild(formInEduClone);
+});
 if (pdfGen) {
-    pdfGen.addEventListener('click', (() => {
+    pdfGen.addEventListener('click', () => {
         window.print();
-    }));
-}
-if (addskills) {
-    addskills.addEventListener('click', () => {
-        if (skillform) {
-            const skillform2 = skillform.cloneNode(true);
-            skillform.appendChild(skillform2);
-        }
     });
 }
-let newformarr;
+const mainSkillForm = document.getElementById('mainskillForm');
+addskills.addEventListener('click', () => {
+    const skillformClone = skillform.cloneNode(true);
+    mainSkillForm?.appendChild(skillformClone);
+});
 const resumeGen = () => {
-    const Name = document.getElementById('name')?.value;
-    const fatherName = document.getElementById('fname')?.value;
-    const email = document.getElementById('email')?.value;
-    const contact = document.getElementById('contact')?.value;
-    const address = document.getElementById('address')?.value;
-    const edu = Array.from(document.querySelectorAll('#formInEdu input')).map(inp => inp.value);
-    const work = Array.from(document.querySelectorAll('#expform input')).map(inp => inp.value);
-    const skills = Array.from(document.querySelectorAll('#skillform input')).map(inp => inp.value.trim());
-    let eduJoin = '';
-    let workJoin = '';
-    edu.forEach((inp, index) => {
-        if (((index + 1) % 4 === 0)) {
-            eduJoin += inp + '<br>';
+    imgLoader();
+    const Name = document.getElementById('name')?.value || '-';
+    const fatherName = document.getElementById('fname')?.value || '-';
+    const email = document.getElementById('email')?.value || '-';
+    const contact = document.getElementById('contact')?.value || '-';
+    const address = document.getElementById('address')?.value || '-';
+    const eduInputs = Array.from(document.querySelectorAll('#formInEdu input'));
+    const edu = eduInputs.map(input => input.value);
+    const workInputs = Array.from(document.querySelectorAll('#expform input'));
+    const work = workInputs.map(input => input.value);
+    const skillInputs = Array.from(document.querySelectorAll('#skillform input'));
+    const skills = skillInputs.map(input => input.value.trim());
+    console.log('Name:', Name);
+    console.log('Father Name:', fatherName);
+    console.log('Email:', email);
+    console.log('Contact:', contact);
+    console.log('Address:', address);
+    console.log('Education:', edu);
+    console.log('Work:', work);
+    console.log('Skills:', skills);
+    const eduJoin = edu.reduce((acc, inp, index) => {
+        if ((index + 1) % 4 === 0) {
+            acc += inp + '<br>';
         }
         else {
-            eduJoin += inp + ' | ';
+            acc += inp + ' | ';
         }
-    });
-    work.forEach((inp, index) => {
-        if (((index + 1) % 3 === 0)) {
-            workJoin += inp + '<br>';
+        return acc;
+    }, '');
+    const workJoin = work.reduce((acc, inp, index) => {
+        if ((index + 1) % 3 === 0) {
+            acc += inp + '<br>';
         }
         else {
-            workJoin += inp + ' | ';
+            acc += inp + ' | ';
         }
-    });
-    const skillJoin = skills.map(inp => `<li>${inp}</li>`).join(` `);
-    const allInp = [Name, fatherName, contact, address, ...edu, ...work, ...skills];
-    const isEmpty = allInp.some(ele => ele === '');
+        return acc;
+    }, '');
+    const skillJoin = skills.map(inp => `<li>${inp}</li>`).join(' ');
+    const allInputs = [Name, fatherName, contact, address, ...edu, ...work, ...skills];
+    const isEmpty = allInputs.some(ele => ele.trim() === '');
+    console.log('isEmpty:', isEmpty);
     const htmlOfResume = `
         <div class="resume">
-        <h2>RESUME</h2>
-        <hr>
-        <h3>PERSONAL INFORMATION</h3>
-        <h4>NAME : ${Name}</h4>
-        <h4>FATHER NAME : ${fatherName}</h4>
-        <h4>EMAIL : ${email}</h4>
-        <h4>CONTACT INFO : ${contact}</h4>
-        <h4>ADDRESS : ${address}</h4>
-
-        <h3>EDUCATION</h3>
-        <h4>${eduJoin}</h4>
-
-        <h3>WORKING EXPERIENCE</h3>
-        <h4>${workJoin}</h4>
-
-        <h3>SKILLS</h3>
-        <ul>
-            ${skillJoin}
-         </ul>
-         </div>
-        `;
+            <h2>RESUME</h2>
+            <hr>
+            <img src="${document.getElementById('pfp')?.src}" alt="pfp" id="pfp" class="pfpImg" />
+            <h3>PERSONAL INFORMATION</h3>
+            <h4>NAME : ${Name}</h4>
+            <h4>FATHER NAME : ${fatherName}</h4>
+            <h4>EMAIL : ${email}</h4>
+            <h4>CONTACT INFO : ${contact}</h4>
+            <h4>ADDRESS : ${address}</h4>
+            <h3>EDUCATION</h3>
+            <h4>${eduJoin}</h4>
+            <h3>WORKING EXPERIENCE</h3>
+           <h4>${workJoin}</h4>
+           <h3>SKILLS</h3>
+            <ul>
+                ${skillJoin}
+            </ul>
+        </div>
+    `;
     if (!isEmpty && resumeOutput && form) {
         resumeOutput.innerHTML = htmlOfResume;
     }
     else if (resumeOutput) {
-        let errorResume = ` 
-            <h2>Please fill out all mandatory fields before generating the resume.</h2>
-            `;
-        resumeOutput.innerHTML = errorResume;
+        resumeOutput.innerHTML = '<h2>Please fill out all mandatory fields before generating the resume.</h2>';
     }
     else {
-        alert(`SOMETHING BAD HAPPENED`);
+        alert('SOMETHING BAD HAPPENED');
     }
 };

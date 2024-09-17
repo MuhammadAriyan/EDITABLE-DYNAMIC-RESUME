@@ -1,138 +1,164 @@
+const skills = document.getElementById('skills') as HTMLDivElement;
+const skillButton = document.getElementById('btnS') as HTMLButtonElement;
+const expform = document.getElementById('expform') as HTMLDivElement;
+const addexp = document.getElementById('addexp') as HTMLButtonElement;
+const addskills = document.getElementById('addskills') as HTMLButtonElement;
+const skillform = document.getElementById('skillform') as HTMLDivElement;
+const formInEdu = document.getElementById('formInEdu') as HTMLDivElement;
+const addedu = document.getElementById('addedu') as HTMLButtonElement;
+const resumeOutput = document.getElementById('resumeOutput') as HTMLDivElement;
+const form = document.getElementById('form') as HTMLFormElement;
+const makeform = document.getElementById('makeform');
+const pstitle = document.getElementById('pstitle');
+const pdfGen = document.getElementById('pdfGen') as HTMLButtonElement;
+const addimage = document.getElementById('add-image') as HTMLInputElement
+const pfp = document.getElementById('pfp')
 
 
-const skills = document.getElementById('skills') as HTMLDivElement
-const skillButton = document.getElementById('btnS')
-const expform = document.getElementById('expform')
-const addexp = document.getElementById('addexp')
-const addskills = document.getElementById('addskills')
-const skillform = document.getElementById('skillform')
-const formInEdu = document.getElementById('formInEdu')
-const addedu = document.getElementById('addedu')
-const resumeOutput = document.getElementById('resumeOutput') 
-const form = document.getElementById('form')
-const makeform = document.getElementById('makeform')
-const pstitle = document.getElementById('pstitle')
-const Name = (document.getElementById('name') as HTMLInputElement)?.value || '-'
-const fatherName = (document.getElementById('fname') as HTMLInputElement)?.value || '-'
-const email = (document.getElementById('email') as HTMLInputElement)?.value || '-'
-const contact = (document.getElementById('contact') as HTMLInputElement)?.value || '-'
-const address = (document.getElementById('address') as HTMLInputElement)?.value || '-'
-const pdfGen = document.getElementById('pdfGen')
+const imgLoader = () => {
+    
+    const addimage = document.getElementById('add-image') as HTMLInputElement
+    const pfp = document.getElementById('pfp') as HTMLImageElement
+    const file = addimage.files?.[0]
+    if(file){        
+    const url = URL.createObjectURL(file)
+     pfp.src = url as string
+    const read = new FileReader();
+    read.onload = () => {
+        pfp.src = read.result as string; 
+        console.log('pfp changed');
+        
+    };
+    read.readAsDataURL(file);
+
+    }else{
+        console.log("file is false");
+        
+    }
+}
+
+const updateSkillButtonText = () => {
+    if (skills.classList.contains('hidden')) {
+        skillButton.textContent = 'SHOW SKILLS';
+    } else {
+        skillButton.textContent = 'HIDE SKILLS';
+    }
+};
 
 if (skillButton) {
     skillButton.addEventListener('click', () => {
-        skills.classList.toggle("hidden")
-        if (skills.classList.contains('hidden')) {
-            skillButton.textContent = 'SHOW SKILLS'
-        } else {
-            skillButton.textContent = 'HIDE SKILLS'
-        }
-    })
+        skills.classList.toggle('hidden');
+        updateSkillButtonText();
+    });
 } else {
-    console.error('something bad happened!')
+    console.error('skillButton element is missing!');
 }
 
-if(addexp){
-    addexp.addEventListener('click',()=>{
-        if(expform){
-            const expform2 = expform.cloneNode(true)
-            expform.appendChild(expform2)
-        }
+const mainExpForm = document.getElementById('mainexpForm')
+addexp.addEventListener('click', () => {
+        const expformClone = expform.cloneNode(true) as HTMLDivElement;
+        mainExpForm?.appendChild(expformClone);
     })
+
+const mainEduForm = document.getElementById('maineduForm')
+addedu.addEventListener('click', () => {
+      const formInEduClone = formInEdu.cloneNode(true) as HTMLDivElement;
+       mainEduForm?.appendChild(formInEduClone);
+ });
+
+
+if (pdfGen) {
+    pdfGen.addEventListener('click', () => {
+        window.print();
+    });
 }
 
+const mainSkillForm = document.getElementById('mainskillForm') 
+addskills.addEventListener('click', () => {
+    const skillformClone = skillform.cloneNode(true) as HTMLDivElement;
+    mainSkillForm?.appendChild(skillformClone);
+    });
 
-if(addedu){
-    addedu.addEventListener('click',()=>{
-        if(formInEdu){
-            const formInEdu2 = formInEdu.cloneNode(true)
-            formInEdu.appendChild(formInEdu2)
+const resumeGen = () => {
+    imgLoader()
+    const Name = (document.getElementById('name') as HTMLInputElement)?.value || '-';
+    const fatherName = (document.getElementById('fname') as HTMLInputElement)?.value || '-';
+    const email = (document.getElementById('email') as HTMLInputElement)?.value || '-';
+    const contact = (document.getElementById('contact') as HTMLInputElement)?.value || '-';
+    const address = (document.getElementById('address') as HTMLInputElement)?.value || '-';
+
+    const eduInputs = Array.from(document.querySelectorAll('#formInEdu input')) as HTMLInputElement[];
+    const edu = eduInputs.map(input => input.value);
+
+    const workInputs = Array.from(document.querySelectorAll('#expform input')) as HTMLInputElement[];
+    const work = workInputs.map(input => input.value);
+
+    const skillInputs = Array.from(document.querySelectorAll('#skillform input')) as HTMLInputElement[];
+    const skills = skillInputs.map(input => input.value.trim());
+    
+    console.log('Name:', Name);
+    console.log('Father Name:', fatherName);
+    console.log('Email:', email);
+    console.log('Contact:', contact);
+    console.log('Address:', address);
+    console.log('Education:', edu);
+    console.log('Work:', work);
+    console.log('Skills:', skills);
+
+    const eduJoin = edu.reduce((acc, inp, index) => {
+        if ((index + 1) % 4 === 0) {
+            acc += inp + '<br>';
+        } else {
+            acc += inp + ' | ';
         }
-    })
-}
+        return acc;
+    }, '');
 
-if(pdfGen){
-    pdfGen.addEventListener('click',(()=>{
-        window.print()
-    }))
-}
-
-
-if(addskills){
-    addskills.addEventListener('click',()=>{
-        if(skillform){
-            const skillform2 = skillform.cloneNode(true)
-            skillform.appendChild(skillform2)
+    const workJoin = work.reduce((acc, inp, index) => {
+        if ((index + 1) % 3 === 0) {
+            acc += inp + '<br>';
+        } else {
+            acc += inp + ' | ';
         }
-    })
-}
+        return acc;
+    }, '');
 
-let newformarr: string[]
+    const skillJoin = skills.map(inp => `<li>${inp}</li>`).join(' ');
 
+    const allInputs = [Name, fatherName, contact, address, ...edu, ...work, ...skills];
+    const isEmpty = allInputs.some(ele => ele.trim() === '');
 
-const resumeGen= ()=>{
-        const Name = (document.getElementById('name') as HTMLInputElement)?.value 
-         const fatherName = (document.getElementById('fname') as HTMLInputElement)?.value 
-         const email = (document.getElementById('email') as HTMLInputElement)?.value 
-          const contact = (document.getElementById('contact') as HTMLInputElement)?.value 
-          const address = (document.getElementById('address') as HTMLInputElement)?.value 
-          const edu = Array.from(document.querySelectorAll('#formInEdu input')).map(inp=>(inp as HTMLInputElement).value)
-          const work = Array.from(document.querySelectorAll('#expform input')).map(inp=>(inp as HTMLInputElement).value)
-          const skills = Array.from(document.querySelectorAll('#skillform input')).map(inp=>(inp as HTMLInputElement).value.trim())
-          let eduJoin = ''
-          let workJoin = ''
+    console.log('isEmpty:', isEmpty);
 
-          edu.forEach((inp,index) => {
-            if(((index + 1 )%4===0)){
-                eduJoin+= inp + '<br>'
-            }else{
-                eduJoin+= inp + ' | '
-            }
-          })
-
-          work.forEach((inp,index) => {
-            if(((index + 1 )%3===0)){
-                workJoin+= inp + '<br>'
-            }else{
-                workJoin+= inp + ' | '
-            }
-          })
-
-          const skillJoin = skills.map(inp=>`<li>${inp}</li>`).join(` `)
-          const allInp = [Name,fatherName,contact,address,...edu,...work,...skills]
-         const isEmpty = allInp.some(ele => ele === '')
-        const htmlOfResume = `
+    const htmlOfResume = `
         <div class="resume">
-        <h2>RESUME</h2>
-        <hr>
-        <h3>PERSONAL INFORMATION</h3>
-        <h4>NAME : ${Name}</h4>
-        <h4>FATHER NAME : ${fatherName}</h4>
-        <h4>EMAIL : ${email}</h4>
-        <h4>CONTACT INFO : ${contact}</h4>
-        <h4>ADDRESS : ${address}</h4>
+            <h2>RESUME</h2>
+            <hr>
+            <img src="${(document.getElementById('pfp') as HTMLImageElement)?.src}" alt="pfp" id="pfp" class="pfpImg" />
+            <h3>PERSONAL INFORMATION</h3>
+            <h4>NAME : ${Name}</h4>
+            <h4>FATHER NAME : ${fatherName}</h4>
+            <h4>EMAIL : ${email}</h4>
+            <h4>CONTACT INFO : ${contact}</h4>
+            <h4>ADDRESS : ${address}</h4>
+            <h3>EDUCATION</h3>
+            <h4>${eduJoin}</h4>
+            <h3>WORKING EXPERIENCE</h3>
+           <h4>${workJoin}</h4>
+           <h3>SKILLS</h3>
+            <ul>
+                ${skillJoin}
+            </ul>
+        </div>
+    `
 
-        <h3>EDUCATION</h3>
-        <h4>${eduJoin}</h4>
+    
 
-        <h3>WORKING EXPERIENCE</h3>
-        <h4>${workJoin}</h4>
-
-        <h3>SKILLS</h3>
-        <ul>
-            ${skillJoin}
-         </ul>
-         </div>
-        `
-        
-        if( !isEmpty && resumeOutput && form){
-             resumeOutput.innerHTML = htmlOfResume
-        }else if(resumeOutput){
-            let errorResume = ` 
-            <h2>Please fill out all mandatory fields before generating the resume.</h2>
-            ` 
-            resumeOutput.innerHTML = errorResume
-        }else{
-            alert(`SOMETHING BAD HAPPENED`)
-        }
+       if (!isEmpty && resumeOutput && form) {
+        resumeOutput.innerHTML = htmlOfResume;
+    } else if (resumeOutput) {
+        resumeOutput.innerHTML = '<h2>Please fill out all mandatory fields before generating the resume.</h2>';
+    } else {
+        alert('SOMETHING BAD HAPPENED');
     }
+};

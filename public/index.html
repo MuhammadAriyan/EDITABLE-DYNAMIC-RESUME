@@ -20,6 +20,8 @@
                 </div>
                 <div class="inputInPI">
                     <hr>
+                    <label for="add-image" id="labelforPfp" >ADD YOUR PFP</label>
+                    <input type="file" name=""  id="add-image" oninput=" resumeGen()" accept="image/jpeg , image/png ,image/jpg">
                     <label for="name">NAME :</label>
                     <input type="text" id="name" oninput="resumeGen()" required />
                     <label for="fname">FATHER NAME :</label>
@@ -37,6 +39,7 @@
                     <img src="graduation-cap.png" alt="edu icon" id="ficon2" />
                     EDUCATION
                 </div>
+                <div id="maineduForm">
                 <div class="formInEdu" id="formInEdu">
                     <hr>
                     <label for="datestart">STARTED</label>
@@ -48,13 +51,16 @@
                     <label for="dateend">ENDED</label>
                     <input type="date" id="dateend" oninput="resumeGen()" required />
                 </div>
-                <button id="addedu" type="button">ADD EDUCATION</button>
+            </div>
+                <button id="addedu"  type="button">ADD EDUCATION</button>
+            
             </div>
             <div class="formP">
                 <div class="subtitle">
                     <img src="briefcase.png" alt="briefcase icon" id="ficons" />
                     WORKING EXPERIENCE
                 </div>
+                <div id="mainexpForm">
                 <div id="expform">
                     <hr>
                     <label for="workstart">STARTED</label>
@@ -64,6 +70,7 @@
                     <label for="workend">ENDED</label>
                     <input type="date" id="workend" oninput="resumeGen()" required />
                 </div>
+                </div>
                 <button id="addexp" type="button">ADD EXPERIENCE</button>
             </div>
             <div class="formP">
@@ -72,9 +79,11 @@
                         <img src="pencil.png" alt="pencil icon" id="ficons" />
                         SKILLS
                     </div>
+                    <div id="mainskillForm">
                     <ul id="skillform">
                         <li><input type="text" id="skill1" oninput="resumeGen()" /></li>
                     </ul>
+                </div>
                 </div>
                 <button id="addskills" type="button">ADD SKILLS</button>
                 <button id="btnS" type="button">HIDE SKILLS</button>
